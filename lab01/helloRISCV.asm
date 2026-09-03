@@ -5,7 +5,7 @@
  	
 .data								# start of the data segment 
 	msg: .string "\n\n\nHello, Felix!\n"		# .string is an alias for .asciz, a null-terminated (\0) ASCII string
-	lab: .string "This is CDA4205L Lab 1\n"
+	lab: .string "This is CDA4205L Lab "
 	
 .text 							# start of the text segment
 	__main: 			
@@ -14,8 +14,14 @@
 		ecall						# perform the environment call (print string stored at address "msg" to the console)
 
 		li 	a7, 4					# print string ecall
-		la 	a0, lab 				# load address of the lab message
-		ecall						# print "This is CDA4205L Lab 1"
+		la 	a0, lab 				# load address of the lab message prefix
+		ecall						# print "This is CDA4205L Lab "
+
+		li 	a7, 5					# ReadInt: read an integer from the user (popup if that setting is on)
+		ecall						# result is returned in a0
+
+		li 	a7, 1					# PrintInt: print the integer in a0
+		ecall						# print the lab number entered at runtime
 		
 		li 	a7, 10 				# load value 10 into argument register a7, defines the "exit with code 0" ecall
 		ecall						# perform the environment call
