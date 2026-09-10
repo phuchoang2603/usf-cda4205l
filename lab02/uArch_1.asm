@@ -25,9 +25,7 @@
 	# output: a0 = a0 * a1
 	_multiply:
 		#---- your code here
-		
-		
-		
+		mul a0, a0, a1		# a0 = a0 * a1 (hardware multiplier)
 		#---- end of your code
 		jr ra
 

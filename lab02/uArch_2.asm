@@ -25,6 +25,14 @@
 	# output: a0 = a0 * a1
 	_multiply:
 		#---- your code here
+    mv   t0, a0               # Save original multiplicand (a0) into t0
+    mv   t1, a1               # Copy multiplier (a1) into t1 to use as a counter
+    li   a0, 0                # Clear a0 to use as the running total
+
+    mul_loop:
+    add  a0, a0, t0           # Add multiplicand to total
+    addi t1, t1, -1           # Decrement loop counter
+    bnez t1, mul_loop         # Repeat until counter hits 0
 		
 		
 		#---- end of your code
