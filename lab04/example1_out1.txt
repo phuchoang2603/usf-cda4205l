@@ -1,0 +1,9 @@
+lw 7 9 0
+addi 10 0 10
+addi 11 0 20
+bge 10 11 12
+add 12 11 0
+jal 1 12
+add 12 10 0
+jal 1 4
+sw 9 10 0
