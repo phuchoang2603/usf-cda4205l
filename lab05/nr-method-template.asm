@@ -5,17 +5,17 @@
 	li t0, 4205		# load a value
 	
 	# 2a. Convert the value to a single-precision floating point. Store the result in fa0 (floating point argument register). 
-	# [your code here]
+	fcvt.s.w fa0, t0
 	
 	jal prntFloat		# print it to be sure the conversion works
 	
 	# 2b. Perform the square root operation on the conversion result.
-	# [your code here]
+	fsqrt.s fa0, fa0
 	
 	jal prntFloat		# Print the result.
 
 	# 2c. Square the result by multiplying it by itself.
-	# [your code here]
+	fmul.s fa0, fa0, fa0
 	
 	jal prntFloat		# Print the result again.
 	jal prntNewLine
@@ -23,17 +23,17 @@
 
 	# 2d. (repeating 2a, 2b, and 2c, except with double precision)
 	# * Convert the value to a double-precision floating point. Store the result in fa0 (floating point argument register). 
-	# [your code here]
+	fcvt.d.w fa0, t0
 	
 	jal prntDouble		# Print the result.
 	
 	# * Perform the square root operation on the conversion result.
-	# [your code here]
+	fsqrt.d fa0, fa0
 	
 	jal prntDouble		# Print the result.
 
 	# * Square the result by multiplying it by itself, and print the result again.
-	# [your code here]
+	fmul.d fa0, fa0, fa0
 	
 	jal prntDouble
 	jal prntNewLine
