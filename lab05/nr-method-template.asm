@@ -1,4 +1,5 @@
 .data
+thresholds:	.double 1e-1, 1e-2, 1e-3, 1e-4, 1e-5, 1e-6, 1e-7, 1e-8
 
 
 .text
@@ -69,6 +70,33 @@ testLoop:
 	addi s0, s0, 2
 	ble s0, s1, testLoop
 	
+	
+	# step 5: loop until the result changes by less than a threshold
+	li t1, 420500		# number n you want sqrt (between 10^5 and 10^6)
+	fcvt.d.w ft0, t1
+	
+	la s0, thresholds	# pointer to current threshold
+	li s1, 8		# number of thresholds to test
+
+threshTestLoop:
+	fld ft1, 0(s0)		# ft1 = threshold
+	jal NewtonRootsThresh	# ft10 = sqrt(n), t0 = iterations used
+	mv s2, t0
+	
+	jal prntNewLine
+	fmv.d fa0, ft1		# print threshold
+	jal prntDouble
+	mv a0, s2		# print iterations
+	li a7, 1
+	ecall
+	jal prntNewLine
+	fmv.d fa0, ft10		# print result
+	jal prntDouble
+	
+	addi s0, s0, 8
+	addi s1, s1, -1
+	bgtz s1, threshTestLoop
+	
 	jal exit
 		
 		
@@ -98,6 +126,37 @@ NewtonRootsLoop:
 	bgtz t0, NewtonRootsLoop
 	
 	jr ra 
+
+
+# step 5 version
+# input:  ft0 = n, ft1 = threshold, ft2 = 2.0, ft4 = 10.0
+# output: ft10 = sqrt(n), t0 = number of iterations performed
+NewtonRootsThresh:
+	li t0, 0
+	flt.d t4, ft0, ft4	# t4 = (n < 10)
+	beqz t4, threshGuessDiv10
+	fdiv.d ft10, ft0, ft2	# n < 10: x0 = n / 2
+	j NewtonRootsThreshLoop
+threshGuessDiv10:
+	fdiv.d ft10, ft0, ft4	# else: x0 = n / 10
+
+NewtonRootsThreshLoop:
+	fmv.d ft11, ft10	# remember previous guess
+	
+	fmul.d ft6, ft10, ft10	# x^2
+	fsub.d ft6, ft6, ft0	# f(x)  = x^2 - n
+	fmul.d ft8, ft2, ft10	# f'(x) = 2x
+	fdiv.d ft6, ft6, ft8	# f(x) / f'(x)
+	fsub.d ft10, ft10, ft6	# next guess
+	addi t0, t0, 1
+	
+	# keep looping while |current - previous| >= threshold
+	fsub.d ft6, ft10, ft11
+	fabs.d ft6, ft6
+	flt.d t4, ft6, ft1
+	beqz t4, NewtonRootsThreshLoop
+	
+	jr ra
 
 
 # helper functions
