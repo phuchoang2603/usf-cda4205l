@@ -1,0 +1,57 @@
+`timescale 1ns / 1ns
+
+module alu_testbench();
+
+    // ALU Inputs
+    reg signed [3:0]  operation;
+    reg signed [31:0] A;
+    reg signed [31:0] B;
+
+    // ALU Output
+    wire signed [31:0] ALUResult;
+
+    // Unit under test
+    alu u0 (operation, A, B, ALUResult);
+
+    initial begin
+        $monitor("%b\t%d\t%d\t%d", operation, A, B, ALUResult);
+
+        /* Initial values.
+           T1: A = 197, B = 237 (both positive)
+           T2/T3/T4: change B to -13 */
+        A = 197;
+        B = 237;
+
+        /* Test #01: add */
+        #5 operation = 4'b0010;
+        /* Test #02: sub */
+        #5 operation = 4'b0110;
+        /* Test #03: mul */
+        #5 operation = 4'b0111;
+        /* Test #04: div */
+        #5 operation = 4'b1111;
+        /* Test #05: sll */
+        #5 operation = 4'b0100;
+        /* Test #06: srl */
+        #5 operation = 4'b1100;
+        /* Test #07: sra */
+        #5 operation = 4'b1110;
+        /* Test #08: and */
+        #5 operation = 4'b0000;
+        /* Test #09: or */
+        #5 operation = 4'b0001;
+        /* Test #10: xor */
+        #5 operation = 4'b0011;
+        /* Test #11: eq */
+        #5 operation = 4'b1000;
+        /* Test #12: neq */
+        #5 operation = 4'b1001;
+        /* Test #13: lt */
+        #5 operation = 4'b1010;
+        /* Test #14: geq */
+        #5 operation = 4'b1011;
+
+        #5 $finish;
+    end
+
+endmodule

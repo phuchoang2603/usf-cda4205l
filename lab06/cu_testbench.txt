@@ -1,0 +1,40 @@
+`timescale 1ns / 1ns
+
+module cu_testbench();
+
+    // CU Input
+    reg [6:0] opcode;
+
+    // CU Outputs
+    wire ALUSrc, MemtoReg, RegWrite, MemRead;
+    wire MemWrite, Branch, Jump, Jalr;
+    wire [1:0] ALUOp;
+
+    // Unit under test
+    cu u0 (opcode, ALUSrc, MemtoReg, RegWrite, MemRead,
+           MemWrite, Branch, Jump, Jalr, ALUOp);
+
+    initial begin
+        $monitor("opcode=%b | ALUSrc=%b MemtoReg=%b RegWrite=%b MemRead=%b MemWrite=%b Branch=%b Jump=%b Jalr=%b ALUOp=%b",
+                 opcode, ALUSrc, MemtoReg, RegWrite, MemRead,
+                 MemWrite, Branch, Jump, Jalr, ALUOp);
+
+        /* Test #01: R-type */
+        #5 opcode = 7'b0110011;
+        /* Test #02: Load */
+        #5 opcode = 7'b0000011;
+        /* Test #03: Jalr */
+        #5 opcode = 7'b1100111;
+        /* Test #04: I-type */
+        #5 opcode = 7'b0010011;
+        /* Test #05: S-type */
+        #5 opcode = 7'b0100011;
+        /* Test #06: B-type */
+        #5 opcode = 7'b1100011;
+        /* Test #07: J-type */
+        #5 opcode = 7'b1101111;
+
+        #5 $finish;
+    end
+
+endmodule

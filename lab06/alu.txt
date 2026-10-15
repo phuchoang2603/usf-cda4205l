@@ -1,0 +1,41 @@
+`timescale 1ns / 1ns
+
+module alu(
+    // Inputs
+    input signed [3:0]  operation,
+    input signed [31:0] A,
+    input signed [31:0] B,
+
+    // Output
+    output reg signed [31:0] ALUResult
+);
+
+    always @(*) begin
+        case (operation)
+            // Arithmetic
+            4'b0010: ALUResult = A + B;     // add
+            4'b0110: ALUResult = A - B;     // sub
+            4'b0111: ALUResult = A * B;     // mul
+            4'b1111: ALUResult = A / B;     // div
+
+            // Shift
+            4'b0100: ALUResult = A << B;    // sll
+            4'b1100: ALUResult = A >> B;    // srl
+            4'b1110: ALUResult = A >>> B;   // sra
+
+            // Bitwise boolean logic
+            4'b0000: ALUResult = A & B;     // and
+            4'b0001: ALUResult = A | B;     // or
+            4'b0011: ALUResult = A ^ B;     // xor
+
+            // Comparison
+            4'b1000: ALUResult = (A == B);  // eq
+            4'b1001: ALUResult = (A != B);  // neq
+            4'b1010: ALUResult = (A <  B);  // lt
+            4'b1011: ALUResult = (A >= B);  // geq
+
+            default: ALUResult = 0;
+        endcase
+    end
+
+endmodule
